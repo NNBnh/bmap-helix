@@ -1,9 +1,4 @@
 
-dwim_exit = {
-  normal: "collapse_selection",
-  select: "normal_mode"
-}
-
 "i" = "extend_line_up"
 "k" = "extend_line_down"
 "j" = "extend_char_left"
@@ -37,7 +32,7 @@ target_prev = {
 
 insert_mode = {
   normal: "insert_mode"
-  select: "change_selection_noyank"
+  select: ["delete_selection_noyank", "insert_mode"]
 }
 
 paste = {
@@ -50,7 +45,15 @@ shell_output = {
   select: ["delete_selection_noyank", "shell_insert_output"]
 }
 
-"a" = "extend_line"
+dwim_exit = {
+  normal: "collapse_selection",
+  select: "normal_mode"
+}
+
+dwim_select = {
+  normal: "select_mode",
+  select: "extend_line"
+}
 
 {
   exit: [dwim_exit],
@@ -106,7 +109,7 @@ shell_output = {
   assign: ["select_register"],
   command: ["command_mode", shell_output],
 
-  focus: ["select_mode", "select_all"],
+  focus: [dwim_select, "select_all"],
   self: ["flip_selections", "ensure_selections_forward"],
   cycle: ["rotate_selections_forward", "rotate_selections_backward"],
   item: ["rotate_selection_contents_backward", "rotate_selection_contents_forward"],
@@ -114,48 +117,38 @@ shell_output = {
   movement: [:todo, "match_brackets"],
   local: ["join_selections", :todo],
 
-  [keys.normal."space"]
+  advance: {
+    advance: [["align_view_center", "align_view_middle", "hover"]], #TODO
+    enter: ["split_selection_on_newline"],
+    area: ["buffer_picker", "file_picker"],
 
-  "space" = ["align_view_center", "align_view_middle", "hover"] #TODO
-  "ret" = "split_selection_on_newline"
-  "tab" = "buffer_picker"
-  "S-tab" = "file_picker"
+    up: ["goto_file_start", "scroll_up"],
+    down: ["goto_file_end", "scroll_down"],
+    left: ["extend_to_line_start", :todo],
+    right: ["extend_to_line_end_newline", :todo],
+    backward: ["goto_first_nonwhitespace", "page_up"],
+    forward: [nil, "page_down"],
 
-  "i" = ["collapse_selection", "select_mode", "goto_file_start", "normal_mode"]
-  "I" = "scroll_up"
-  "k" = ["collapse_selection", "select_mode", "goto_file_end", "normal_mode"]
-  "K" = "scroll_down"
-  "j" = "extend_to_line_start"
-  "l" = "extend_to_line_end_newline"
-  "u" = ["collapse_selection", "select_mode", "goto_first_nonwhitespace", "normal_mode"]
-  "U" = "page_up"
-  "O" = "page_down"
+    primary: ["surround_add"],
+    secondary: ["search_selection"],
+    tertiary: ["select_textobject_inner"],
+    alt_primary: ["surround_replace"],
+    alt_secondary: ["keep_selections", "remove_selections"],
+    alt_tertiary: ["shell_keep_pipe"],
 
-  "d" = "surround_add"
-  "f" = "search_selection"
-  "s" = "select_textobject_inner"
-  "e" = "surround_replace"
-  "r" = "keep_selections"
-  "R" = "remove_selections"
-  "w" = "shell_keep_pipe"
+    time: ["earlier", "later"],
+    cut: ["surround_delete"],
 
-  "z" = "earlier"
-  "Z" = "later"
-  "x" = "surround_delete"
+    new: ["open_below", "open_above"],
 
-  "n" = "open_below"
-  "N" = "open_above"
+    previous: ["goto_prev_diag", "goto_first_diag"],
+    next: ["goto_next_diag", "goto_last_diag"],
+    code: ["format_selections"],
 
-  "," = ["collapse_selection", "select_mode", "goto_prev_diag", "normal_mode"]
-  "lt" = ["collapse_selection", "select_mode", "goto_first_diag", "normal_mode"]
-  "." = ["collapse_selection", "select_mode", "goto_next_diag", "normal_mode"]
-  "gt" = ["collapse_selection", "select_mode", "goto_last_diag", "normal_mode"]
-  "/" = "format_selections"
+    focus: ["select_textobject_around"],
+    self: ["trim_selections"],
 
-  "a" = "select_textobject_around"
-  "q" = "trim_selections"
-
-  "m" = "symbol_picker"
-  "M" = "workspace_symbol_picker"
-  "y" = "no_op" #TODO
+    movement: ["symbol_picker", "workspace_symbol_picker"],
+    local: [:todo]
+  }
 }
