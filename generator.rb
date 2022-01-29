@@ -20,7 +20,7 @@ def dwim_movement(cmd)
   }
 end
 
-map = {
+action_map = {
   exit: [
     {
       normal: "collapse_selection",
@@ -66,16 +66,16 @@ map = {
   minus: [:todo],
   plus: [:todo],
 
-  num_1: [:todo],
-  num_2: [:todo],
-  num_3: [:todo],
-  num_4: [:todo],
-  num_5: [:todo],
-  num_6: [:todo],
-  num_7: [:todo],
-  num_8: [:todo],
-  num_9: [:todo],
-  num_0: [:todo],
+  num_1: [:not_todo],
+  num_2: [:not_todo],
+  num_3: [:not_todo],
+  num_4: [:not_todo],
+  num_5: [:not_todo],
+  num_6: [:not_todo],
+  num_7: [:not_todo],
+  num_8: [:not_todo],
+  num_9: [:not_todo],
+  num_0: [:not_todo],
 
   assign: ["select_register"],
   command: ["command_mode", dwim_insert("shell_insert_output")],
@@ -128,4 +128,80 @@ map = {
     movement: ["symbol_picker", "workspace_symbol_picker"],
     local: [:todo]
   }
+}
+
+keymap = {
+# up: "up",
+# down: "down",
+# left: "left",
+# right: "right",
+# pgup: "pageup",
+# pgdn: "pagedown",
+# home: "home",
+# end: "end",
+
+# back: "backspace",
+# delete: "del",
+  advance: "space",
+  enter: "ret",
+  area: "tab",
+  exit: "esc",
+
+  up: "i",
+  down: "k",
+  left: "j",
+  right: "l",
+  backward: "u",
+  forward: "o",
+
+  primary: "d",
+  secondary: "f",
+  tertiary: "s",
+  alt_primary: "e",
+  alt_secondary: "r",
+  alt_tertiary: "w",
+
+  time: "z",
+  cut: "x",
+  in: "c",
+  out: "v",
+
+  target: "h",
+  bookmark: "b",
+  new: "n",
+  play: "p",
+
+  previous: [",", "lt"],
+  next: [".", "gt"],
+  code: ["/", "?"],
+  terminal: ["`", "~"],
+
+  align_left: ["[", "{"],
+  align_right: ["]", "}"],
+  align_center: ["\\", "|"],
+
+  minus: ["minus", "_"],
+  plus: ["=", "plus"],
+
+  num_1: ["1", "!"],
+  num_2: ["2", "@"],
+  num_3: ["3", "#"],
+  num_4: ["4", "$"],
+  num_5: ["5", "percent"],
+  num_6: ["6", "^"],
+  num_7: ["7", "&"],
+  num_8: ["8", "*"],
+  num_9: ["9", "("],
+  num_0: ["0", ")"],
+
+  assign: ["'", '"'],
+  command: ["semicolon", ":"],
+
+  focus: "a",
+  self: "q",
+  cycle: "g",
+  item: "t",
+
+  movement: "m",
+  local: "y",
 }
