@@ -1,24 +1,28 @@
 
-"i" = "extend_line_up"
-"k" = "extend_line_down"
-"j" = "extend_char_left"
-"l" = "extend_char_right"
-"u" = "extend_prev_word_start"
-"U" = "extend_prev_long_word_start"
-"o" = "extend_next_word_end"
-"O" = "extend_next_long_word_end"
+dwim_exit = {
+  normal: "collapse_selection",
+  select: "normal_mode",
+  insert: "normal_mode"
+}
 
-  [keys.select."space"]
+#TODO
+# "i" = "extend_line_up"
+# "k" = "extend_line_down"
+# "j" = "extend_char_left"
+# "l" = "extend_char_right"
+# "u" = "extend_prev_word_start"
+# "U" = "extend_prev_long_word_start"
+# "o" = "extend_next_word_end"
+# "O" = "extend_next_long_word_end"
 
-  "i" = "goto_file_start"
-  "I" = "scroll_up"
-  "k" = "goto_file_end"
-  "K" = "scroll_down"
-  "j" = "extend_to_line_start"
-  "l" = "extend_to_line_end"
-  "u" = "goto_first_nonwhitespace"
-  "U" = "page_up"
-  "O" = "page_down"
+# [keys.select."space"]
+# "i" = "goto_file_start"
+# "I" = "scroll_up"
+# "k" = "goto_file_end"
+# "K" = "scroll_down"
+# "j" = "extend_to_line_start"
+# "l" = "extend_to_line_end"
+# "u" = "goto_first_nonwhitespace"
 
 target_next = {
   normal: "search_next",
@@ -30,24 +34,20 @@ target_prev = {
   select: "extend_search_prev"
 }
 
-insert_mode = {
+dwim_insert = {
   normal: "insert_mode"
-  select: ["delete_selection_noyank", "insert_mode"]
+  select: ["delete_selection_noyank", "insert_mode"],
+  insert: "completion"
 }
 
-paste = {
+dwim_paste = {
   normal: "paste_before",
   select: ["delete_selection_noyank", "paste_before"]
 }
 
-shell_output = {
+dwim_shell = {
   normal: "shell_insert_output",
   select: ["delete_selection_noyank", "shell_insert_output"]
-}
-
-dwim_exit = {
-  normal: "collapse_selection",
-  select: "normal_mode"
 }
 
 dwim_select = {
@@ -55,7 +55,7 @@ dwim_select = {
   select: "extend_line"
 }
 
-{
+map = {
   exit: [dwim_exit],
   area: ["goto_next_buffer", "goto_previous_buffer"],
 
@@ -66,7 +66,7 @@ dwim_select = {
   backward: ["move_prev_word_start", "move_prev_long_word_start"],
   forward: ["move_next_word_end", "move_next_long_word_end"],
 
-  primary: [insert_mode, "code_action"],
+  primary: [dwim_insert, "code_action"],
   secondary: ["search", "rsearch"],
   tertiary: ["extend_line", "extend_to_line_bounds"],
   alt_primary: ["replace", "rename_symbol"],
@@ -76,7 +76,7 @@ dwim_select = {
   time: ["undo", "redo"],
   cut: ["delete_selection", "delete_selection_noyank"],
   in: ["yank"],
-  out: [paste, :todo],
+  out: [dwim_paste, :todo],
 
   target: [target_next, target_prev],
   bookmark: [:todo, :todo],
@@ -107,7 +107,7 @@ dwim_select = {
   num_0: [:todo],
 
   assign: ["select_register"],
-  command: ["command_mode", shell_output],
+  command: ["command_mode", dwim_shell],
 
   focus: [dwim_select, "select_all"],
   self: ["flip_selections", "ensure_selections_forward"],
