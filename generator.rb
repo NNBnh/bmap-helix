@@ -1,5 +1,59 @@
+
+dwim_exit = {
+  normal: "collapse_selection",
+  select: "normal_mode"
+}
+
+"i" = "extend_line_up"
+"k" = "extend_line_down"
+"j" = "extend_char_left"
+"l" = "extend_char_right"
+"u" = "extend_prev_word_start"
+"U" = "extend_prev_long_word_start"
+"o" = "extend_next_word_end"
+"O" = "extend_next_long_word_end"
+
+  [keys.select."space"]
+
+  "i" = "goto_file_start"
+  "I" = "scroll_up"
+  "k" = "goto_file_end"
+  "K" = "scroll_down"
+  "j" = "extend_to_line_start"
+  "l" = "extend_to_line_end"
+  "u" = "goto_first_nonwhitespace"
+  "U" = "page_up"
+  "O" = "page_down"
+
+target_next = {
+  normal: "search_next",
+  select: "extend_search_next"
+}
+
+target_prev = {
+  normal: "search_prev",
+  select: "extend_search_prev"
+}
+
+insert_mode = {
+  normal: "insert_mode"
+  select: "change_selection_noyank"
+}
+
+paste = {
+  normal: "paste_before",
+  select: ["delete_selection_noyank", "paste_before"]
+}
+
+shell_output = {
+  normal: "shell_insert_output",
+  select: ["delete_selection_noyank", "shell_insert_output"]
+}
+
+"a" = "extend_line"
+
 {
-  exit: ["collapse_selection"],
+  exit: [dwim_exit],
   area: ["goto_next_buffer", "goto_previous_buffer"],
 
   up: ["move_line_up", "copy_selection_on_prev_line"],
@@ -9,7 +63,7 @@
   backward: ["move_prev_word_start", "move_prev_long_word_start"],
   forward: ["move_next_word_end", "move_next_long_word_end"],
 
-  primary: ["insert_mode", "code_action"],
+  primary: [insert_mode, "code_action"],
   secondary: ["search", "rsearch"],
   tertiary: ["extend_line", "extend_to_line_bounds"],
   alt_primary: ["replace", "rename_symbol"],
@@ -19,9 +73,9 @@
   time: ["undo", "redo"],
   cut: ["delete_selection", "delete_selection_noyank"],
   in: ["yank"],
-  out: ["paste_before", :todo],
+  out: [paste, :todo],
 
-  target: ["search_next", "search_prev"],
+  target: [target_next, target_prev],
   bookmark: [:todo, :todo],
   new: ["add_newline_below", "add_newline_above"],
   play: ["replay_macro", "record_macro"],
@@ -50,7 +104,7 @@
   num_0: [:todo],
 
   assign: ["select_register"],
-  command: ["command_mode", "shell_insert_output"],
+  command: ["command_mode", shell_output],
 
   focus: ["select_mode", "select_all"],
   self: ["flip_selections", "ensure_selections_forward"],
@@ -96,76 +150,6 @@
   "lt" = ["collapse_selection", "select_mode", "goto_first_diag", "normal_mode"]
   "." = ["collapse_selection", "select_mode", "goto_next_diag", "normal_mode"]
   "gt" = ["collapse_selection", "select_mode", "goto_last_diag", "normal_mode"]
-  "/" = "format_selections"
-
-  "a" = "select_textobject_around"
-  "q" = "trim_selections"
-
-  "m" = "symbol_picker"
-  "M" = "workspace_symbol_picker"
-  "y" = "no_op" #TODO
-
-  [keys.select]
-
-  "esc" = "normal_mode"
-
-  "i" = "extend_line_up"
-  "k" = "extend_line_down"
-  "j" = "extend_char_left"
-  "l" = "extend_char_right"
-  "u" = "extend_prev_word_start"
-  "U" = "extend_prev_long_word_start"
-  "o" = "extend_next_word_end"
-  "O" = "extend_next_long_word_end"
-
-  "d" = "change_selection_noyank" #TODO
-
-  "v" = ["delete_selection_noyank", "paste_before"]
-  "V" = :todo
-
-  "h" = "extend_search_next"
-  "H" = "extend_search_prev"
-
-  ":" = ["delete_selection_noyank", "shell_insert_output"]
-
-  "a" = "extend_line"
-
-  [keys.select."space"]
-
-  "space" = ["align_view_center", "align_view_middle", "hover"] #TODO
-  "ret" = "split_selection_on_newline"
-  "tab" = "buffer_picker"
-  "S-tab" = "file_picker"
-
-  "i" = "goto_file_start"
-  "I" = "scroll_up"
-  "k" = "goto_file_end"
-  "K" = "scroll_down"
-  "j" = "extend_to_line_start"
-  "l" = "extend_to_line_end"
-  "u" = "goto_first_nonwhitespace"
-  "U" = "page_up"
-  "O" = "page_down"
-
-  "d" = "surround_add"
-  "f" = "search_selection"
-  "s" = "select_textobject_inner"
-  "e" = "surround_replace"
-  "r" = "keep_selections"
-  "R" = "remove_selections"
-  "w" = "shell_keep_pipe"
-
-  "z" = "earlier"
-  "Z" = "later"
-  "x" = "surround_delete"
-
-  "n" = "open_below"
-  "N" = "open_above"
-
-  "," = "goto_prev_diag"
-  "lt" = "goto_first_diag"
-  "." = "goto_next_diag"
-  "gt" = "goto_last_diag"
   "/" = "format_selections"
 
   "a" = "select_textobject_around"
