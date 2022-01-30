@@ -130,7 +130,7 @@ action_map = {
   }
 }
 
-keymap = {
+key_map = {
 # up: "up",
 # down: "down",
 # left: "left",
@@ -205,3 +205,48 @@ keymap = {
   movement: "m",
   local: "y",
 }
+
+key_map.each do |meaning, keys|
+  if keys.is_a?(String)
+    if keys.length == 1
+      keys = [keys, keys.upcase]
+    else
+      keys = [keys, "S-#{keys}"]
+    end
+  end
+
+  key = keys[0]
+  key_shift = keys[1]
+  key_alt = "A-#{key}"
+  key_alt_shift = "A-#{key_shift}"
+
+  actions = action_map[meaning]
+
+  normal_action = actions[0][:normal] || actions[0] || "no_op"
+  normal_action_shift = actions[1][:normal] || actions[1] || "no_op"
+  select_action = actions[0][:select] || normal_action || "no_op"
+  select_action_shift = actions[1][:select] || normal_action_shift || "no_op"
+  insert_action = actions[0][:insert] || normal_action || "no_op"
+  insert_action_shift = actions[1][:insert] || normal_action_shift || "no_op"
+
+  {
+    key => normal_action,
+    key_shift => normal_action_shift,
+    key_alt => normal_action,
+    key_alt_shift => normal_action_shift
+  }
+
+  {
+    key => select_action,
+    key_shift => select_action_shift,
+    key_alt => select_action,
+    key_alt_shift => select_action_shift
+  }
+
+  {
+    key => insert_action,
+    key_shift => insert_action_shift,
+    key_alt => insert_action,
+    key_alt_shift => insert_action_shift
+  }
+end
