@@ -1,22 +1,17 @@
+todo, not_todo = nil
+
 def dwim_insert(main_cmd, ins_cmd = nil)
-  if ins_cmd.nil?
-    {
-      normal: ["collapse_selection", main_cmd],
-      select: ["delete_selection_noyank", main_cmd]
-    }
-  else
-    {
-      normal: ["collapse_selection", main_cmd],
-      select: ["delete_selection_noyank", main_cmd],
-      insert: ins_cmd
-    }
-  end
+  {
+    normal: ["collapse_selection", main_cmd],
+    select: ["delete_selection_noyank", main_cmd],
+    insert: ins_cmd
+  }
 end
 
 def dwim_movement(cmd)
   {
     normal: cmd,
-    select: cmd.gsub(/\A(move_|go|)/, "extend_")
+    select: cmd.gsub(/\A(move_|go|)/, "extend_"),
   }
 end
 
@@ -47,35 +42,35 @@ action_map = {
   time: ["undo", "redo"],
   cut: ["delete_selection", "delete_selection_noyank"],
   in: ["yank"],
-  out: [dwim_insert("paste_before"), :todo],
+  out: [dwim_insert("paste_before"), todo],
 
   target: [dwim_movement("search_next"), dwim_movement("search_prev")],
-  bookmark: [:todo, :todo],
+  bookmark: [todo, todo],
   new: ["add_newline_below", "add_newline_above"],
   play: ["replay_macro", "record_macro"],
 
   previous: ["decrement", "switch_to_lowercase"],
   next: ["increment", "switch_to_uppercase"],
-  code: ["toggle_comments", :todo],
+  code: ["toggle_comments", todo],
   terminal: ["shell_pipe_to", "shell_pipe"],
 
-  align_left: ["unindent", :todo],
-  align_right: ["indent", :todo],
-  align_center: ["align_selections", :todo],
+  align_left: ["unindent", todo],
+  align_right: ["indent", todo],
+  align_center: ["align_selections", todo],
 
-  minus: [:todo],
-  plus: [:todo],
+  minus: [todo],
+  plus: [todo],
 
-  num_1: [:not_todo],
-  num_2: [:not_todo],
-  num_3: [:not_todo],
-  num_4: [:not_todo],
-  num_5: [:not_todo],
-  num_6: [:not_todo],
-  num_7: [:not_todo],
-  num_8: [:not_todo],
-  num_9: [:not_todo],
-  num_0: [:not_todo],
+  num_1: [not_todo],
+  num_2: [not_todo],
+  num_3: [not_todo],
+  num_4: [not_todo],
+  num_5: [not_todo],
+  num_6: [not_todo],
+  num_7: [not_todo],
+  num_8: [not_todo],
+  num_9: [not_todo],
+  num_0: [not_todo],
 
   assign: ["select_register"],
   command: ["command_mode", dwim_insert("shell_insert_output")],
@@ -91,8 +86,8 @@ action_map = {
   cycle: ["rotate_selections_forward", "rotate_selections_backward"],
   item: ["rotate_selection_contents_backward", "rotate_selection_contents_forward"],
 
-  movement: [:todo, "match_brackets"],
-  local: ["join_selections", :todo],
+  movement: [todo, "match_brackets"],
+  local: ["join_selections", todo],
 
   advance: {
     advance: [["align_view_center", "align_view_middle", "hover"]], #TODO
@@ -101,8 +96,8 @@ action_map = {
 
     up: ["goto_file_start", "scroll_up"], #TODO
     down: ["goto_file_end", "scroll_down"], #TODO
-    left: [dwim_movement("goto_line_start"), :todo],
-    right: [dwim_movement("goto_line_end_newline"), :todo],
+    left: [dwim_movement("goto_line_start"), todo],
+    right: [dwim_movement("goto_line_end_newline"), todo],
     backward: ["goto_first_nonwhitespace", "page_up"], #TODO
     forward: [nil, "page_down"],
 
@@ -126,7 +121,7 @@ action_map = {
     self: ["trim_selections"],
 
     movement: ["symbol_picker", "workspace_symbol_picker"],
-    local: [:todo]
+    local: [todo]
   }
 }
 
@@ -222,31 +217,35 @@ key_map.each do |meaning, keys|
 
   actions = action_map[meaning]
 
-  normal_action = actions[0][:normal] || actions[0] || "no_op"
-  normal_action_shift = actions[1][:normal] || actions[1] || "no_op"
-  select_action = actions[0][:select] || normal_action || "no_op"
-  select_action_shift = actions[1][:select] || normal_action_shift || "no_op"
-  insert_action = actions[0][:insert] || normal_action || "no_op"
-  insert_action_shift = actions[1][:insert] || normal_action_shift || "no_op"
+  (0..3).to_a.each do |i|
+    if ! actions[i].ia_a?(Array)
+      actions[i] = { normal: actions[i] }
+    end
+  end
 
-  {
-    key => normal_action,
-    key_shift => normal_action_shift,
-    key_alt => normal_action,
-    key_alt_shift => normal_action_shift
+  action           = actions[0][:normal] || actions[0]                 || "no_op"
+  action_shift     = actions[1][:normal] || actions[1]                 || "no_op"
+  action_alt       = actions[2][:normal] || actions[2] || action       || "no_op"
+  action_alt_shift = actions[3][:normal] || actions[3] || action_shift || "no_op"
+
+  normal = {
+    key => action,
+    key_shift => action_shift,
+    key_alt => action_alt,
+    key_alt_shift => action_alt_shift
   }
 
-  {
-    key => select_action,
-    key_shift => select_action_shift,
-    key_alt => select_action,
-    key_alt_shift => select_action_shift
+  select = {
+    key => actions[0][:select] || action,
+    key_shift => actions[1][:select] || action_shift,
+    key_alt => actions[2][:select] || action,
+    key_alt_shift => actions[3][:select] || action
   }
 
-  {
-    key => insert_action,
-    key_shift => insert_action_shift,
-    key_alt => insert_action,
-    key_alt_shift => insert_action_shift
+  insert = {
+    key => actions[0][:insert] || action,
+    key_shift => actions[1][:insert] || action_shift,
+    key_alt => actions[2][:insert] || action_shift,
+    key_alt_shift => actions[3][:insert] || action_shift
   }
 end
